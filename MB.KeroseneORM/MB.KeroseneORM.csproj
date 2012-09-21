@@ -1,0 +1,81 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProductVersion>8.0.30703</ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{ED16CF52-FA4B-47FD-A3EF-B40040ABFBA2}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>MB.KeroseneORM</RootNamespace>
+    <AssemblyName>MB.KeroseneORM</AssemblyName>
+    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="System" />
+    <Reference Include="System.Core" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Transactions" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Components\KRecordHelpers.cs" />
+    <Compile Include="Core\KCommandDelete.cs" />
+    <Compile Include="Core\KCommandInsert.cs" />
+    <Compile Include="Core\KCommandUpdate.cs" />
+    <Compile Include="Core\KCommandQuery.cs" />
+    <Compile Include="Core\KCommandRaw.cs" />
+    <Compile Include="Core\KExecutor.cs" />
+    <Compile Include="Core\KEnumerator.cs" />
+    <Compile Include="Core\KParser.cs" />
+    <Compile Include="Core\IKCommand.cs" />
+    <Compile Include="Core\IKLink.cs" />
+    <Compile Include="Core\IKFactory.cs" />
+    <Compile Include="Components\KRecordBuilder.cs" />
+    <Compile Include="Components\KRecord.cs" />
+    <Compile Include="Components\KSchema.cs" />
+    <Compile Include="Components\KTableAlias.cs" />
+    <Compile Include="Components\KParameter.cs" />
+    <Compile Include="Direct\KExecutorDirect.cs" />
+    <Compile Include="Direct\KEnumeratorDirect.cs" />
+    <Compile Include="Direct\KSurrogate.cs" />
+    <Compile Include="Direct\KLinkDirect.cs" />
+    <Compile Include="Direct\IKFactoryDirect.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\MB.Tools\MB.Tools.csproj">
+      <Project>{5E4E3C06-CBBC-4A74-B95E-FC5D85E674B0}</Project>
+      <Name>MB.Tools</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup />
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>

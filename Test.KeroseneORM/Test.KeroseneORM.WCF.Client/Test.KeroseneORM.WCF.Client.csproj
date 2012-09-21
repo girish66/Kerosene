@@ -1,0 +1,86 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">x86</Platform>
+    <ProductVersion>8.0.30703</ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{B9A68FF9-B072-4656-AFE1-75EDE6C0457A}</ProjectGuid>
+    <OutputType>Exe</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>Test.KeroseneORM.WCF.Client</RootNamespace>
+    <AssemblyName>Test.KeroseneORM.WCF.Client</AssemblyName>
+    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
+    <TargetFrameworkProfile>Client</TargetFrameworkProfile>
+    <FileAlignment>512</FileAlignment>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|x86' ">
+    <PlatformTarget>x86</PlatformTarget>
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|x86' ">
+    <PlatformTarget>x86</PlatformTarget>
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="System" />
+    <Reference Include="System.Core" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.ServiceModel" />
+    <Reference Include="System.Transactions" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="WCF.Client.Program.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\MB.KeroseneORM.Maps\MB.KeroseneORM.Maps.csproj">
+      <Project>{490F62D2-8456-4048-99D5-C59489F23E83}</Project>
+      <Name>MB.KeroseneORM.Maps</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\MB.KeroseneORM.SQLServer\MB.KeroseneORM.SQLServer.csproj">
+      <Project>{23755A8B-4400-491B-A654-1C849958694D}</Project>
+      <Name>MB.KeroseneORM.SQLServer</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\MB.KeroseneORM.WCF\MB.KeroseneORM.WCF.csproj">
+      <Project>{9BC68BE8-8CBC-4CCE-94DC-399CED0957EF}</Project>
+      <Name>MB.KeroseneORM.WCF</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\MB.KeroseneORM\MB.KeroseneORM.csproj">
+      <Project>{ED16CF52-FA4B-47FD-A3EF-B40040ABFBA2}</Project>
+      <Name>MB.KeroseneORM</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\MB.Tools\MB.Tools.csproj">
+      <Project>{5E4E3C06-CBBC-4A74-B95E-FC5D85E674B0}</Project>
+      <Name>MB.Tools</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Test.KeroseneORM.Commom\Test.KeroseneORM.Commom.csproj">
+      <Project>{2107894F-07ED-4BB7-BEE5-A188C2606A4F}</Project>
+      <Name>Test.KeroseneORM.Commom</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="App.config" />
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>
