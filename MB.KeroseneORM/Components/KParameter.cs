@@ -104,11 +104,12 @@ namespace MB.KeroseneORM
 		}
 
 		/// <summary>
-		/// Gets the value this parameter holds.
+		/// Gets or sets the value this parameter holds.
 		/// </summary>
 		public object Value
 		{
 			get { return _Value; }
+			set { _Value = value; }
 		}
 	}
 

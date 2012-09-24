@@ -23,8 +23,9 @@ namespace MB.KeroseneORM.WCF
 		{
 			DEBUG.IndentLine( "\n-- KExecutorWCF( Command )" );
 
+			var pars = command.Parameters.Clone(); foreach( var par in pars ) par.Value = command.Link.TransformParameterValue( par.Value );
 			var text = command.CommandText( iterable: true );
-			var pars = command.Parameters;
+
 			_ExecutorId = Link.Proxy.ExecutorCreate( text, pars );
 
 			DEBUG.Unindent();

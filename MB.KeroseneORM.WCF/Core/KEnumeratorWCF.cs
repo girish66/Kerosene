@@ -23,8 +23,9 @@ namespace MB.KeroseneORM.WCF
 		{
 			DEBUG.IndentLine( "\n-- KEnumeratorWCF( Command )" );
 
+			var pars = command.Parameters.Clone(); foreach( var par in pars ) par.Value = command.Link.TransformParameterValue( par.Value );
 			var text = command.CommandText( iterable: true );
-			var pars = command.Parameters;
+
 			_EnumeratorId = Link.Proxy.EnumeratorCreate( text, pars );
 
 			DEBUG.Unindent();

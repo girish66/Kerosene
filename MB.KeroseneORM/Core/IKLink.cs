@@ -4,6 +4,7 @@ namespace MB.KeroseneORM
 {
 	using global::System.Diagnostics;
 	using global::System;
+	using global::System.Linq;
 	using global::System.Collections.Generic;
 	using global::MB.Tools;
 
@@ -84,6 +85,93 @@ namespace MB.KeroseneORM
 		/// <param name="command">The command the executor will be associated with.</param>
 		/// <returns>The new executor created.</returns>
 		IKExecutor CreateExecutor( IKCommandExecutable command );
+	}
+	public static class IKLinkHelper
+	{
+		const string _ParameterTransformerPrefix = "KParameterTransformer::";
+		static string _GetParameterTransformerKey( Type type )
+		{
+			string key = _ParameterTransformerPrefix + type.FullName;
+			return key;
+		}
+
+		/// <summary>
+		/// Adds a parameter transformer delegate to the internal list this link is maintaining. These delegates are used
+		/// to convert from the types of your parameters to the types your database will understand.
+		/// </summary>
+		/// <typeparam name="T">The type of the parameter to convert.</typeparam>
+		/// <param name="link">This link.</param>
+		/// <param name="transformer">The delegate to invoke to convert the parameter into an instance of a type the database
+		/// will understand and accept.</param>
+		/// <param name="replace">Whether to replace a previous existing delegate for this parameter's type, or to throw an
+		/// exception is a duplication is detected.</param>
+		public static void AddParameterTransformer<T>( this IKLink link, Func<T, object> transformer, bool replace = false )
+		{
+			if( link == null ) throw new ArgumentNullException( "link", "Link cannot be null." );
+			if( transformer == null ) throw new ArgumentNullException( "transformer", "Parameter Transformer delegate cannot be null." );
+
+			Type type = typeof( T );
+			string key = _GetParameterTransformerKey( type );
+
+			if( link.ExtendedInfo.ContainsKey( key ) && !replace )
+				throw new InvalidOperationException( "Parameter Transformer delegate already registered for type: " + type.FullName );
+
+			link.ExtendedInfo[key] = transformer;
+		}
+
+		/// <summary>
+		/// Removes the transformer that might be registered for the type given.
+		/// </summary>
+		/// <typeparam name="T">The type of the transformer to remove.</typeparam>
+		/// <param name="link">This link.</param>
+		public static void RemoveParameterTransformer<T>( this IKLink link )
+		{
+			if( link == null ) throw new ArgumentNullException( "link", "Link cannot be null." );
+
+			Type type = typeof( T );
+			string key = _GetParameterTransformerKey( type );
+			link.ExtendedInfo.Remove( key );
+		}
+
+		/// <summary>
+		/// Removes all transformers registered into this link object.
+		/// </summary>
+		/// <param name="link">This link.</param>
+		public static void ClearParameterTransformers( this IKLink link )
+		{
+			if( link == null ) throw new ArgumentNullException( "link", "Link cannot be null." );
+
+			if( link.ExtendedInfo.Count != 0 ) {
+				string[] array = link.ExtendedInfo.Keys.ToArray();
+
+				foreach( var key in array )
+					if( key.StartsWith( _ParameterTransformerPrefix ) )
+						link.ExtendedInfo.Remove( key );
+			}
+		}
+
+		/// <summary>
+		/// Transforms the value given using a registered transformer for its type in this link object. If not transformer
+		/// is registered, the original value is returned.
+		/// </summary>
+		/// <param name="link">This link.</param>
+		/// <param name="value">The value to transform.</param>
+		/// <returns>The value transformed if possible, or the original object.</returns>
+		public static object TransformParameterValue( this IKLink link, object value )
+		{
+			if( link == null ) throw new ArgumentNullException( "link", "Link cannot be null." );
+
+			if( value == null ) return null;
+
+			Type type = value.GetType();
+			string key = _GetParameterTransformerKey( type );
+
+			if( link.ExtendedInfo.ContainsKey( key ) ) {
+				object transformer = link.ExtendedInfo[key];
+				if( transformer is Delegate ) return ( (Delegate)transformer ).DynamicInvoke( value );
+			}
+			return value;
+		}
 	}
 
 	// =====================================================
