@@ -86,17 +86,13 @@ namespace MB.KeroseneORM.Maps
 				// Executing the command...
 				KRecord record = (KRecord)cmd.First(); cmd.Dispose(); cmd = null;
 
-				// Operation failed...
+				// Results of the operation...
 				if( record == null ) { DEBUG.WriteLine( "\n-- MapDelete() => Failed." ); }
+				else { DEBUG.WriteLine( "\n-- MapDelete() => Returned: {0}" ); }
 
-				// Success...
-				else {
-					DEBUG.WriteLine( "\n-- MapDelete() => Returned: {0}" );
-					meta.Record = record;
-					meta.State = KMaps.MetaState.Deleted;
-				}
-
-				// And always returning null as this is a delete operation...
+				// And finalizing...
+				meta.Record = record;
+				meta.State = KMaps.MetaState.Deleted;
 				return null;
 			}
 			finally {

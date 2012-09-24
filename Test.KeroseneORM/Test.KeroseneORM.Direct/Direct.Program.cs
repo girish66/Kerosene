@@ -36,7 +36,7 @@ namespace Test.KeroseneORM.Direct
 			link.AddParameterTransformer<ClockTime>( x => x.ToString() );
 
 			Console.WriteLine( "\n===== Executing the examples..." );
-			Test_ComplexMaps.Dispatcher( link );
+			Test_EasyMaps.Dispatcher( link );
 
 			Console.Write( "\n===== Press [Enter] to dispose the link..." ); Console.ReadLine();
 			link.Dispose();
