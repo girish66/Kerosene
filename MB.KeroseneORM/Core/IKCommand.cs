@@ -146,6 +146,105 @@ namespace MB.KeroseneORM
 			reader.SealRecords = sealRecords;
 			return reader;
 		}
+
+		// The following extension methods permit to chain ConvertBy() with them. This usage scenario was discovered/requested by
+		// Frank (fpw23) from codeproject.com, Oct 5th, 2012
+
+		/// <summary>
+		/// Executes the command associated with the reader and returns a list, potentially empty, containing the records returned
+		/// from the database. It is typically used chained after ConvertBy().
+		/// </summary>
+		/// <param name="reader">The reader.</param>
+		/// <param name="dispose">Whether to dispose the reader after its execution or not.</param>
+		/// <returns>A list containing the results obtained from the database.</returns>
+		public static List<object> ToList( this IKEnumerator reader, bool dispose = true )
+		{
+			if( reader == null ) throw new ArgumentNullException( "reader", "IKEnumerator cannot be null." );
+			List<object> list = new List<object>();
+
+			while( reader.MoveNext() ) list.Add( reader.Converter == null ? reader.Current : reader.Converter( reader.CurrentRecord ) );
+			if( dispose ) reader.Dispose();
+			return list;
+		}
+		
+		/// <summary>
+		/// Executes the command associated with the reader and returns an array, potentially empty, containing the records returned
+		/// from the database. It is typically used chained after ConvertBy().
+		/// </summary>
+		/// <param name="reader">The reader.</param>
+		/// <param name="dispose">Whether to dispose the reader after its execution or not.</param>
+		/// <returns>An array containing the results obtained from the database.</returns>
+		public static object[] ToArray( this IKEnumerator reader, bool dispose = true )
+		{
+			List<object> list = reader.ToList( dispose );
+			object[] array = list.ToArray(); list.Clear(); list = null;
+			return array;
+		}
+		
+		/// <summary>
+		/// Executes the command associated with the reader and returns the first record returned from the database. It can be null
+		/// if no records are produced as the result of the execution of the command. It is typically used chained after ConvertBy().
+		/// </summary>
+		/// <param name="reader">The reader.</param>
+		/// <param name="dispose">Whether to dispose the reader after its execution or not.</param>
+		/// <returns>The first result obtained from the database, or null.</returns>
+		public static object First( this IKEnumerator reader, bool dispose = true )
+		{
+			if( reader == null ) throw new ArgumentNullException( "reader", "IKEnumerator cannot be null." );
+			object r = null;
+
+			if( reader.MoveNext() ) r = reader.Converter == null ? reader.Current : reader.Converter( reader.CurrentRecord );
+			if( dispose ) reader.Dispose();
+			return r;
+		}
+		
+		/// <summary>
+		/// Executes the command associated with the reader and returns the last record returned from the database. It can be null if no records
+		/// are produced as the result of the execution of the command. It is typically used chained after ConvertBy().
+		/// <para>Not that the current implementation of this method retrieves all possible records discarding them until
+		/// the last one is found.</para>
+		/// </summary>
+		/// <param name="reader">The reader.</param>
+		/// <param name="dispose">Whether to dispose the reader after its execution or not.</param>
+		/// <returns>The last result obtained from the database, or null.</returns>
+		public static object Last( this IKEnumerator reader, bool dispose = true )
+		{
+			if( reader == null ) throw new ArgumentNullException( "reader", "IKEnumerator cannot be null." );
+			object r = null;
+
+			while( reader.MoveNext() ) r = reader.Converter == null ? reader.Current : reader.Converter( reader.CurrentRecord );
+			if( dispose ) reader.Dispose();
+			return r;
+		}
+		
+		/// <summary>
+		/// Executes the command associated with the reader, skips the first "skip" records, and then return as many as "take"
+		/// records. It is typically used chained after ConvertBy().
+		/// <para>This enumeration can be empty if no records are produced by the command's execution, or if there are not
+		/// enough records to fulfill the conditions given.</para>
+		/// <para>The implementation of this method retrieves and discards all the "skip" records, and then gets the "take"
+		/// ones.</para>
+		/// </summary>
+		/// <param name="reader">The reader.</param>
+		/// <param name="skip">The number of records to discard.</param>
+		/// <param name="take">The max number of records to take.</param>
+		/// <param name="dispose">Whether to dispose the reader after its execution or not.</param>
+		/// <returns>An enumeration containing the desired records.</returns>
+		public static IEnumerable<object> SkipTake( this IKEnumerator reader, int skip, int take, bool dispose = true )
+		{
+			if( reader == null ) throw new ArgumentNullException( "reader", "IKEnumerator cannot be null." );
+			if( skip < 0 ) throw new ArgumentException( "Skip should be equal or bigger than cero." );
+			if( take <= 0 ) throw new ArgumentException( "Take should be bigger than cero." );
+
+			try {
+				for( int i = 0; i < skip; i++ ) if( !reader.MoveNext() ) yield break;
+				for( int i = 0; i < take; i++ ) {
+					if( reader.MoveNext() ) yield return ( reader.Converter == null ? reader.Current : reader.Converter( reader.CurrentRecord ) );
+					else yield break;
+				}
+			}
+			finally { if( dispose ) reader.Dispose(); }
+		}
 	}
 
 	// -----------------------------------------------------
